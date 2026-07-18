@@ -1,0 +1,10 @@
+Part C — Short Answers
+
+1.Why can't Dog extends Animal, Swimmer?
+Answer: Java only allows single inheritance of classes to avoid the "diamond problem" — ambiguity when two parent classes define conflicting fields or method implementations. Interfaces avoid this because (traditionally) they don't carry state or conflicting concrete implementations, so a class can safely implement many of them.
+
+2.Why does sleep() belong in Animal?
+Answer: Because every subclass's behavior is identical, putting it in the shared parent class means it's written once and automatically inherited everywhere — changing it later only requires editing one place, and it guarantees consistency across all animals.
+
+3.Why is makeSound() abstract instead of shared?
+Answer: Because each animal's sound is genuinely different — there's no correct "default" behavior to inherit. Marking it abstract forces every subclass to supply its own implementation, which prevents someone from forgetting to override it and accidentally shipping wrong or missing behavior

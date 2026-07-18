@@ -1,0 +1,13 @@
+Part A — Design Decisions
+
+##PaymentMethod → abstract class
+All payment types share identical, concrete logic: the transaction ID generator (shared counter + timestamp) and validateAccountDetails() (same validation logic for Credit Card and Bank Transfer). Interfaces can't hold shared state (like a running counter) or ready-made method bodies that multiple classes inherit for free, so this shared implementation must live in an abstract class. It also represents a true "is-a" relationship — every concrete type genuinely is a payment method.
+
+##Refundable → interface
+Refundability is an optional capability, not something every payment method has (Crypto explicitly cannot be refunded). It's a contract, not shared implementation, so it belongs as an interface — this also keeps it decoupled from the class hierarchy so it can be mixed into only the classes that qualify
+
+##RecurringBillable → interface
+Same reasoning: only Credit Card and PayPal support subscriptions. This is an optional, orthogonal ability with no shared implementation needed, so it's a pure interface contract.
+
+##LoyaltyPointsEarner → interface
+This needs to be mixable into any payment class regardless of what it already extends. Since Java only allows single class inheritance but multiple interface implementation, this capability must be an interface — otherwise a class like CryptoPayment (which already extends PaymentMethod) couldn't also gain this ability.

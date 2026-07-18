@@ -1,0 +1,18 @@
+Part C — Justification Questions
+
+1. Why can't validateAccountDetails() and the transaction ID generator live in an interface instead of an abstract class?
+Answer:
+Both require concrete, shared implementation — not just a method signature. The transaction ID generator specifically needs shared mutable state (a counter) to guarantee uniqueness across all payment instances, and interfaces can't hold instance/static state that behaves this way. An abstract class is the only construct that lets multiple subclasses inherit one real implementation instead of each rewriting (or worse, subtly duplicating) the same logic.
+
+2. Why can't Refundable and RecurringBillable be abstract classes instead of interfaces?
+
+Answer:
+Because Java only allows single class inheritance — a class like CryptoPayment already extends PaymentMethod, so it couldn't also extend Refundable if that were a class. These capabilities are optional and orthogonal to what a payment method fundamentally is, so they need to be mixable independently, which only interfaces (with multiple implementation) allow.
+3. New requirement: identical audit logging for all payment methods — abstract class or new interface?
+
+ANswer:
+This belongs in the abstract class, as a new concrete method (e.g., logTransaction()). Reasoning: it's a mandatory, universal behavior (not optional/mixable like refunds), and the logic is identical across every type, so it should be written once and inherited — exactly the same rationale that put validateAccountDetails() and the ID generator there. Interfaces are for optional contracts; this is core, shared behavior
+
+4. Why does CryptoPayment extends PaymentMethod implements LoyaltyPointsEarner work, but would fail if LoyaltyPointsEarner were an abstract class?
+ANswer:
+Java permits a class to extend exactly one class but implement any number of interfaces, so combining one abstract superclass with one or more interfaces is always legal. If LoyaltyPointsEarner were itself an abstract class, CryptoPayment would need to extend two classes simultaneously (PaymentMethod and LoyaltyPointsEarner), which Java disallows to avoid ambiguity from multiple inheritance (e.g., conflicting state or method implementations — the "diamond problem")

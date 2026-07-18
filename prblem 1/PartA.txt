@@ -1,0 +1,5 @@
+Part A — Design Decisions
+
+Animal → abstract class. Dog, Cat, and Bird all fundamentally are animals, and they share real implementation (sleep()) plus a common field (name) and constructor logic. Interfaces can't hold instance fields or constructors, so an abstract class is the only option that lets us share that code instead of duplicating it.
+
+Swimmer / Flyer → interfaces. Swimming and flying are optional abilities, not part of what an animal fundamentally is — not all animals swim or fly, and the ones that do aren't related to each other by a common ancestor (a Dog and a Bird share no "flying/swimming" lineage). Interfaces let unrelated classes opt into a capability without forcing an inheritance relationship, and since Java allows multiple interface implementation, a class can pick up several abilities at once
