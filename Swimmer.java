@@ -1,0 +1,5 @@
+ interface Swimmer {
+
+    void swim();
+
+}
